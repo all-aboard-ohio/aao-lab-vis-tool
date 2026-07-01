@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Photo coming soon">
+  <defs>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e8eef3" />
+      <stop offset="1" stop-color="#d7cdb8" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#ground)" />
+
+  <!-- horizon + existing corridor -->
+  <rect x="0" y="330" width="800" height="170" fill="#012345" fill-opacity="0.06" />
+  <path d="M320 330 L360 500 M480 330 L440 500" stroke="#012345" stroke-opacity="0.25" stroke-width="6" stroke-linecap="round" />
+  <g stroke="#012345" stroke-opacity="0.18" stroke-width="6" stroke-linecap="round">
+    <path d="M336 360 L464 360" />
+    <path d="M330 400 L470 400" />
+    <path d="M322 448 L478 448" />
+  </g>
+
+  <!-- camera glyph -->
+  <g transform="translate(400 210)" fill="#012345" fill-opacity="0.35">
+    <rect x="-56" y="-30" width="112" height="74" rx="12" />
+    <rect x="-20" y="-44" width="40" height="20" rx="6" />
+    <circle cx="0" cy="7" r="24" fill="#FBF3E3" />
+    <circle cx="0" cy="7" r="13" fill="#012345" fill-opacity="0.4" />
+  </g>
+
+  <text x="400" y="410" text-anchor="middle"
+        font-family="Poppins, sans-serif" font-size="28" font-weight="800" fill="#012345">
+    Existing conditions photo coming soon
+  </text>
+</svg>

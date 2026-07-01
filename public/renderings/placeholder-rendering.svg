@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Rendering coming soon">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#388CBB" stop-opacity="0.25" />
+      <stop offset="1" stop-color="#FBF3E3" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 0 40" fill="none" stroke="#012345" stroke-opacity="0.06" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#sky)" />
+  <rect width="800" height="500" fill="url(#grid)" />
+
+  <!-- stylised platform + train -->
+  <g transform="translate(0 300)">
+    <rect x="0" y="120" width="800" height="80" fill="#012345" fill-opacity="0.08" />
+    <rect x="120" y="60" width="560" height="90" rx="14" fill="#012345" fill-opacity="0.14" />
+    <rect x="150" y="80" width="70" height="50" rx="8" fill="#388CBB" fill-opacity="0.35" />
+    <rect x="240" y="80" width="70" height="50" rx="8" fill="#388CBB" fill-opacity="0.35" />
+    <rect x="330" y="80" width="70" height="50" rx="8" fill="#388CBB" fill-opacity="0.35" />
+    <circle cx="220" cy="165" r="14" fill="#012345" fill-opacity="0.2" />
+    <circle cx="560" cy="165" r="14" fill="#012345" fill-opacity="0.2" />
+  </g>
+
+  <!-- location pin -->
+  <g transform="translate(400 170)">
+    <path d="M0 -46 C24 -46 40 -28 40 -6 C40 22 0 54 0 54 C0 54 -40 22 -40 -6 C-40 -28 -24 -46 0 -46 Z"
+          fill="#B72717" />
+    <circle cx="0" cy="-4" r="14" fill="#FBF3E3" />
+  </g>
+
+  <text x="400" y="410" text-anchor="middle"
+        font-family="Poppins, sans-serif" font-size="30" font-weight="800" fill="#012345">
+    Rendering coming soon
+  </text>
+  <text x="400" y="444" text-anchor="middle"
+        font-family="Montserrat, sans-serif" font-size="17" fill="#012345" fill-opacity="0.65">
+    AAO contributors are creating artwork for this location
+  </text>
+</svg>

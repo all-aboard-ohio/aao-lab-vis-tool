@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #fbf3e3;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+  }
+
+  /* Visible focus ring for keyboard users on all interactive elements */
+  :focus-visible {
+    outline: 3px solid #388cbb;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* --- Leaflet overrides to match AAO branding --- */
+  .leaflet-container {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #e8eef3;
+  }
+
+  /* Custom marker pins are pure HTML, so strip Leaflet's default box */
+  .aao-marker {
+    background: transparent;
+    border: none;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 0.75rem;
+  }
+
+  .leaflet-bar a {
+    color: #012345;
+  }
+
+  /* Route pulse animation for the active/selected location */
+  @keyframes aao-pulse {
+    0% {
+      transform: scale(0.9);
+      opacity: 0.7;
+    }
+    70% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .aao-pin__pulse {
+    animation: aao-pulse 1.8s ease-out infinite;
+  }
+
+  /* Bottom-sheet / side-panel slide-in */
+  @keyframes aao-slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes aao-slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .aao-panel-mobile {
+    animation: aao-slide-up 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .aao-panel-desktop {
+    animation: aao-slide-in 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aao-pin__pulse,
+    .aao-panel-mobile,
+    .aao-panel-desktop {
+      animation: none;
+    }
+  }
+}

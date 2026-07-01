@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Imagine Your Rail Line">
+  <rect width="64" height="64" rx="14" fill="#012345" />
+  <!-- rails -->
+  <path d="M20 12 L16 54 M44 12 L48 54" stroke="#FBF3E3" stroke-width="3" stroke-linecap="round" />
+  <!-- ties -->
+  <g stroke="#388CBB" stroke-width="3" stroke-linecap="round">
+    <path d="M18.8 22 L45.2 22" />
+    <path d="M18 32 L46 32" />
+    <path d="M17.2 42 L46.8 42" />
+  </g>
+  <!-- location pin -->
+  <circle cx="32" cy="30" r="7" fill="#B72717" />
+  <circle cx="32" cy="30" r="2.6" fill="#FBF3E3" />
+</svg>
