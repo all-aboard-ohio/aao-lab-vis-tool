@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { List, X, TrainFront, ChevronDown } from 'lucide-react'
 import { routes } from './data/routes'
 import RouteMap from './components/RouteMap'
@@ -14,10 +14,42 @@ import './index.css'
 // added to routes.js.
 const MULTI = routes.length > 1
 
+// ---------------------------------------------------------------------------
+// Deep linking via the URL hash (works on static GitHub Pages, no router dep).
+//   #/line/<routeId>            -> a specific line
+//   #/line/<routeId>/<itemId>   -> a specific point within a line
+//   (empty / #/)                -> the "All lines" overview
+// ---------------------------------------------------------------------------
+function parseHash(hash) {
+  const parts = (hash || '').replace(/^#\/?/, '').split('/').filter(Boolean)
+  if (parts[0] === 'line' && parts[1]) {
+    return { routeId: parts[1], locationId: parts[2] || null }
+  }
+  return { routeId: null, locationId: null }
+}
+
+function buildHash(activeRouteId, selectedRoute, selectedId) {
+  if (selectedId && selectedRoute) return `#/line/${selectedRoute.id}/${selectedId}`
+  if (activeRouteId) return `#/line/${activeRouteId}`
+  return '#/'
+}
+
+// Resolve a parsed hash to valid { routeId, locationId }, dropping unknown ids.
+function resolveDeepLink({ routeId, locationId }) {
+  const route = routeId ? routes.find((r) => r.id === routeId) : null
+  if (!route) return { routeId: null, locationId: null }
+  const hasLoc = locationId && route.locations.some((l) => l.id === locationId)
+  return { routeId: route.id, locationId: hasLoc ? locationId : null }
+}
+
 export default function App() {
+  const initial = resolveDeepLink(parseHash(window.location.hash))
+
   // null = "All lines" overview; otherwise a specific route id.
-  const [activeRouteId, setActiveRouteId] = useState(() => (MULTI ? null : routes[0].id))
-  const [selectedId, setSelectedId] = useState(null)
+  const [activeRouteId, setActiveRouteId] = useState(
+    () => initial.routeId ?? (MULTI ? null : routes[0].id),
+  )
+  const [selectedId, setSelectedId] = useState(() => initial.locationId)
   const [panelOpen, setPanelOpen] = useState(false) // mobile stop-list drawer
   const [sharing, setSharing] = useState(false)
 
@@ -40,6 +72,28 @@ export default function App() {
     [visibleRoutes],
   )
   const anyPlaceholder = visibleRoutes.some((r) => r.alignmentPlaceholder)
+
+  // Keep the URL in sync with the current view (shareable deep link). We use
+  // replaceState so this does not fire `hashchange` (no feedback loop) and does
+  // not flood browser history as the user clicks around.
+  useEffect(() => {
+    const desired = buildHash(activeRouteId, selectedRoute, selectedId)
+    const current = window.location.hash || '#/'
+    if (current !== desired) {
+      window.history.replaceState(null, '', desired)
+    }
+  }, [activeRouteId, selectedRoute, selectedId])
+
+  // Respond to genuine external navigation (back/forward, edited/bookmarked URL).
+  useEffect(() => {
+    function onHashChange() {
+      const { routeId, locationId } = resolveDeepLink(parseHash(window.location.hash))
+      setActiveRouteId(routeId ?? (MULTI ? null : routes[0].id))
+      setSelectedId(locationId)
+    }
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
 
   function handleSelect(id) {
     setSelectedId(id)

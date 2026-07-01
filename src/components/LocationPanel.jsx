@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { X, Share2, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
+import { X, Share2, ChevronLeft, ChevronRight, MapPin, Maximize2 } from 'lucide-react'
 import { getCategory } from '../data/categories'
 import CategoryIcon from './CategoryIcon'
+import Lightbox from './Lightbox'
 
 function StatusBadge({ status }) {
   const map = {
@@ -24,6 +25,7 @@ function StatusBadge({ status }) {
 export default function LocationPanel({ location, route, onClose, onShare }) {
   const cat = getCategory(location.type)
   const [imgIndex, setImgIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const panelRef = useRef(null)
   const closeRef = useRef(null)
 
@@ -53,12 +55,22 @@ export default function LocationPanel({ location, route, onClose, onShare }) {
     >
       {/* Image gallery */}
       <div className="relative flex-none bg-aao-dark-blue/5">
-        <img
-          src={image?.src}
-          alt={image?.alt}
-          className="h-48 w-full object-cover md:h-56"
-          loading="lazy"
-        />
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label={`View image larger: ${image?.alt ?? location.name}`}
+          className="group block w-full cursor-zoom-in"
+        >
+          <img
+            src={image?.src}
+            alt={image?.alt}
+            className="h-48 w-full object-cover md:h-56"
+            loading="lazy"
+          />
+          <span className="pointer-events-none absolute bottom-2 right-2 flex items-center gap-1 rounded-lg bg-aao-dark-blue/70 px-2 py-1 font-body text-[11px] font-semibold text-white opacity-90 transition-opacity group-hover:opacity-100">
+            <Maximize2 size={12} /> Expand
+          </span>
+        </button>
 
         {/* Category chip */}
         <span
@@ -175,6 +187,15 @@ export default function LocationPanel({ location, route, onClose, onShare }) {
           <Share2 size={18} /> Share this location
         </button>
       </div>
+
+      {lightboxOpen && images.length > 0 && (
+        <Lightbox
+          images={images}
+          startIndex={imgIndex}
+          title={location.name}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   )
 }

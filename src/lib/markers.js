@@ -25,13 +25,15 @@ export function createMarkerIcon(type, { active = false } = {}) {
   const cat = getCategory(type)
   const glyph = GLYPHS[type] ?? GLYPHS.station
   const size = active ? 46 : 38
-  const pulse = active
-    ? `<span class="aao-pin__pulse" style="position:absolute;inset:0;border-radius:9999px;background:${cat.color};"></span>`
+  // A static translucent halo marks the selected pin without any looping
+  // animation (an animated ring reads as a distracting "bounce").
+  const halo = active
+    ? `<span style="position:absolute;left:50%;top:${size * 0.36}px;width:${size * 1.55}px;height:${size * 1.55}px;transform:translate(-50%,-50%);border-radius:9999px;background:${cat.color};opacity:0.18;"></span>`
     : ''
 
   const html = `
     <div style="position:relative;width:${size}px;height:${size}px;">
-      ${pulse}
+      ${halo}
       <div style="
         position:relative;
         width:${size}px;height:${size}px;

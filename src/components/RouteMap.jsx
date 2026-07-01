@@ -17,11 +17,22 @@ function MapController({ routes, selectedId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boundsKey, map])
 
-  // Fly to a location when one is selected.
+  // Fly to a location when one is selected, offsetting the target so the marker
+  // stays in the *visible* part of the map (the detail panel covers the right
+  // side on desktop and the bottom on mobile). Uses a single, gentle animation.
   useEffect(() => {
     if (!selectedId) return
     const loc = routes.flatMap((r) => r.locations).find((l) => l.id === selectedId)
-    if (loc) map.flyTo(loc.coordinates, 15, { duration: 0.8 })
+    if (!loc) return
+
+    const targetZoom = Math.max(map.getZoom(), 15)
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches
+    // Shift the geographic center so the marker lands left-of-center (desktop)
+    // or upper area (mobile), clear of the panel.
+    const offset = isDesktop ? [190, 0] : [0, Math.round(window.innerHeight * 0.18)]
+    const point = map.project(loc.coordinates, targetZoom).add(offset)
+    const center = map.unproject(point, targetZoom)
+    map.flyTo(center, targetZoom, { duration: 0.5, easeLinearity: 0.25 })
   }, [selectedId, routes, map])
 
   return null

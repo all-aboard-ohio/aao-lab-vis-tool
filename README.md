@@ -14,7 +14,8 @@ Built as part of the [AAO Data Lab](https://lab.allaboardohio.org/) — open-sou
 
 - **Follow a route** on mobile or desktop with a fast, light map (OpenStreetMap — no API key required).
 - **Points of note** — branded callouts for stations, transit-oriented development, grade separations, track improvements, and new construction.
-- **Interactive detail panel** — tap any location for renderings, a description, and facts & figures of impact.
+- **Interactive detail panel** — tap any location for renderings, a description, and facts & figures of impact. Click a rendering to open it full-screen in a lightbox.
+- **Shareable deep links** — the URL updates as you browse (`#/line/<routeId>` for a line, `#/line/<routeId>/<itemId>` for a specific point), so any view can be linked, bookmarked, or shared.
 - **Share to social media** — generate a branded story (9:16) or post (1:1) card and share or download it. Everything is generated in the browser; no user data is collected or uploaded.
 - **Accessible** — keyboard navigable, screen-reader friendly (the stop list is a text alternative to the map), and built to WCAG 2.1 AA.
 
