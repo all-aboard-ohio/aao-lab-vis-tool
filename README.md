@@ -53,6 +53,11 @@ contribute a location.
   - Add a whole new route by appending another object to the `routes` array.
     A **line switcher** and an **"All lines" overview** (every route drawn on the
     map at once) appear automatically as soon as a second route exists.
+  - **Organize content by community/locality.** A route may define a
+    `communities` array (e.g. Marysville, Dublin along the Midwest Connect line);
+    tag each location with a matching `communityId`. A community filter then
+    appears so a city council or legislator can view — and share a deep link to —
+    just *their area's* content (`#/line/<routeId>/area/<communityId>`).
 - **Categories (marker colors & icons):** [`src/data/categories.js`](./src/data/categories.js)
 - **Renderings & photos:** drop image files in [`public/renderings/`](./public/renderings)
   and reference them from a location's `images` array. Placeholder SVGs are used
