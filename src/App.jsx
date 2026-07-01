@@ -230,7 +230,6 @@ export default function App() {
         {selected && (
           <div className="absolute inset-x-0 bottom-0 z-[1100] md:inset-y-0 md:left-auto md:right-0 md:w-[400px]">
             <LocationPanel
-              key={selected.id}
               location={selected}
               route={selectedRoute}
               onClose={() => setSelectedId(null)}

@@ -26,11 +26,20 @@ export default function LocationPanel({ location, route, onClose, onShare }) {
   const cat = getCategory(location.type)
   const [imgIndex, setImgIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [shownId, setShownId] = useState(location.id)
   const panelRef = useRef(null)
   const closeRef = useRef(null)
 
-  // Move focus into the panel on open. The parent remounts this component per
-  // location (via `key`), so gallery state resets naturally without setState.
+  // The panel stays mounted while you switch between locations (so it doesn't
+  // re-animate on every click). Reset gallery state during render when the
+  // location changes — the React-sanctioned alternative to a reset effect.
+  if (shownId !== location.id) {
+    setShownId(location.id)
+    setImgIndex(0)
+    setLightboxOpen(false)
+  }
+
+  // Move focus into the panel on open.
   useEffect(() => {
     closeRef.current?.focus()
   }, [])
