@@ -10,7 +10,9 @@ You don't have to be a developer to help:
 
 - **Add a location or route** — edit [`src/data/routes.js`](./src/data/routes.js). Each
   location needs a `type`, `[lat, lng]` coordinates, a `summary`, `description`,
-  `facts`, and `images`. Copy an existing entry as a template.
+  `facts`, and `images`. Copy an existing entry as a template, and see the
+  [Route Authoring Guide](./docs/authoring-routes.md) for the full data model
+  (routes, communities, and points of note).
 - **Contribute renderings or photos** — add images to [`public/renderings/`](./public/renderings)
   and reference them from a location's `images` array. Please compress images
   (e.g. via [squoosh.app](https://squoosh.app)) and always include descriptive `alt` text.

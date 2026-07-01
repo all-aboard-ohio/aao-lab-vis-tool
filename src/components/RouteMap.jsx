@@ -3,19 +3,20 @@ import { MapContainer, TileLayer, Polyline, Marker, ZoomControl, useMap } from '
 import { BASEMAP, DEFAULT_VIEW } from '../config'
 import { createMarkerIcon } from '../lib/markers'
 
-// Pans/zooms the map imperatively in response to which routes are shown and
+// Pans/zooms the map imperatively in response to which routes/area are shown and
 // which location is selected.
-function MapController({ routes, selectedId }) {
+function MapController({ routes, framePoints, frameKey, selectedId }) {
   const map = useMap()
-  // A stable key so the fit-bounds effect only reruns when the set of visible
-  // routes actually changes, not on every render.
-  const boundsKey = routes.map((r) => r.id).join(',')
 
   useEffect(() => {
-    const points = routes.flatMap((r) => r.alignment)
-    if (points.length) map.fitBounds(points, { padding: [70, 70], maxZoom: 14 })
+    // Prefer an explicit framing (e.g. a focused community); otherwise frame the
+    // full alignment(s) of the visible route(s).
+    const points = framePoints?.length ? framePoints : routes.flatMap((r) => r.alignment)
+    if (points.length) {
+      map.fitBounds(points, { padding: [70, 70], maxZoom: framePoints?.length ? 15 : 14 })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boundsKey, map])
+  }, [frameKey, map])
 
   // Fly to a location when one is selected, offsetting the target so the marker
   // stays in the *visible* part of the map (the detail panel covers the right
@@ -43,7 +44,7 @@ function MapController({ routes, selectedId }) {
  * their location markers, so the caller can show a single line or every line at
  * once ("All lines" overview).
  */
-export default function RouteMap({ routes, selectedId, onSelect }) {
+export default function RouteMap({ routes, selectedId, onSelect, framePoints, frameKey }) {
   const markers = useMemo(
     () =>
       routes.flatMap((route) =>
@@ -108,7 +109,12 @@ export default function RouteMap({ routes, selectedId, onSelect }) {
         />
       ))}
 
-      <MapController routes={routes} selectedId={selectedId} />
+      <MapController
+        routes={routes}
+        framePoints={framePoints}
+        frameKey={frameKey}
+        selectedId={selectedId}
+      />
     </MapContainer>
   )
 }

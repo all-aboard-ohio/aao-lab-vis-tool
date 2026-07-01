@@ -27,21 +27,37 @@ const PLACEHOLDER_EXISTING = '/renderings/placeholder-existing.svg'
 
 export const routes = [
   {
-    id: 'marysville',
-    name: 'Marysville Line',
-    region: 'Union County',
+    id: 'midwest-connect',
+    name: 'Midwest Connect Rail Route',
+    region: 'Chicago–Columbus corridor',
     color: '#012345',
     status: 'proposed',
     // Short blurb shown in the route picker and share cards.
     summary:
-      'A proposed passenger rail connection linking Marysville to the greater Columbus region.',
+      'The proposed Chicago–Columbus corridor. Explore the communities along the line — each has its own stations, development, and improvements.',
+    // Communities / localities grouped along this line. This is how content is
+    // organized so a city, council, or legislator can see just "their area".
+    communities: [
+      {
+        id: 'marysville',
+        name: 'Marysville',
+        county: 'Union County',
+        blurb: 'A downtown station and walkable Uptown district for Union County.',
+      },
+      {
+        id: 'dublin',
+        name: 'Dublin',
+        county: 'Franklin County',
+        blurb: "A stop linking Dublin's Bridge Street District to the corridor.",
+      },
+    ],
     // Map framing when this route is selected.
     view: {
-      center: [40.2389693, -83.3671869],
-      zoom: 13,
+      center: [40.17, -83.24],
+      zoom: 11,
     },
-    // Illustrative alignment through Marysville (PLACEHOLDER — follows the
-    // approximate existing freight corridor, roughly NW to SE).
+    // Illustrative alignment from Marysville southeast toward Dublin (PLACEHOLDER
+    // — follows the approximate existing corridor, roughly NW to SE).
     alignmentPlaceholder: true,
     alignment: [
       [40.2612, -83.3905],
@@ -51,11 +67,16 @@ export const routes = [
       [40.2321, -83.3598],
       [40.2246, -83.3489],
       [40.2178, -83.3372],
+      [40.19, -83.3],
+      [40.155, -83.235],
+      [40.12, -83.16],
+      [40.0997, -83.1266],
     ],
     locations: [
       {
         id: 'marysville-station',
         type: 'station',
+        communityId: 'marysville',
         name: 'Marysville Station',
         coordinates: [40.2389693, -83.3671869],
         status: 'proposed',
@@ -87,6 +108,7 @@ export const routes = [
       {
         id: 'marysville-uptown-tod',
         type: 'tod',
+        communityId: 'marysville',
         name: 'Uptown Marysville District',
         coordinates: [40.2365, -83.3663],
         status: 'concept',
@@ -111,6 +133,7 @@ export const routes = [
       {
         id: 'marysville-us36-grade-separation',
         type: 'grade-separation',
+        communityId: 'marysville',
         name: 'US 36 Grade Separation',
         coordinates: [40.2452, -83.3735],
         status: 'proposed',
@@ -135,6 +158,7 @@ export const routes = [
       {
         id: 'marysville-scioto-track',
         type: 'track-improvement',
+        communityId: 'marysville',
         name: 'Scioto Corridor Track Upgrade',
         coordinates: [40.2321, -83.3598],
         status: 'proposed',
@@ -159,6 +183,7 @@ export const routes = [
       {
         id: 'marysville-pedestrian-crossing',
         type: 'construction',
+        communityId: 'marysville',
         name: 'Fifth Street Pedestrian Crossing',
         coordinates: [40.2402, -83.3689],
         status: 'concept',
@@ -176,6 +201,81 @@ export const routes = [
             src: PLACEHOLDER_RENDERING,
             alt: 'Placeholder rendering of the Fifth Street pedestrian crossing. Artwork coming soon.',
             caption: 'Fifth Street crossing — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+
+      // --- Dublin community (placeholder points) ---
+      {
+        id: 'dublin-station',
+        type: 'station',
+        communityId: 'dublin',
+        name: 'Dublin Bridge Street Station',
+        coordinates: [40.0997, -83.1266],
+        status: 'concept',
+        summary:
+          "A proposed station at the edge of Dublin's walkable Bridge Street District.",
+        description:
+          "A station serving Dublin would connect the Bridge Street District — one of the region's most walkable new neighborhoods — directly to the corridor, giving residents and visitors a car-free way to reach Marysville, Columbus, and beyond. This is a concept placeholder awaiting verified planning data.",
+        facts: [
+          { label: 'Station type', value: 'District infill platform', placeholder: true },
+          { label: 'Walkshed anchor', value: 'Bridge Street District', placeholder: true },
+          { label: 'Est. daily boardings', value: 'TBD', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of the proposed Dublin Bridge Street Station. Artwork coming soon.',
+            caption: 'Dublin Bridge Street Station — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+      {
+        id: 'dublin-bridge-tod',
+        type: 'tod',
+        communityId: 'dublin',
+        name: 'Bridge Street District',
+        coordinates: [40.0985, -83.1291],
+        status: 'concept',
+        summary:
+          "Rail service reinforcing Dublin's flagship walkable, mixed-use district.",
+        description:
+          "The Bridge Street District is already a model of walkable, mixed-use development. A station here would reinforce that investment, pairing housing, offices, and retail with a direct rail connection. This is a concept placeholder awaiting verified planning data.",
+        facts: [
+          { label: 'Focus', value: 'Mixed-use, walkable', placeholder: true },
+          { label: 'Existing district', value: 'Bridge Street', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of transit-oriented development in the Bridge Street District. Artwork coming soon.',
+            caption: 'Bridge Street District — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+      {
+        id: 'dublin-sr161-grade-separation',
+        type: 'grade-separation',
+        communityId: 'dublin',
+        name: 'SR 161 Grade Separation',
+        coordinates: [40.1052, -83.1188],
+        status: 'concept',
+        summary:
+          'A proposed grade separation keeping the rail line and SR 161 traffic flowing safely.',
+        description:
+          'Separating the rail line from SR 161 removes a conflict point on one of Dublin’s busier corridors, improving safety and reliability for both trains and drivers. This is a concept placeholder awaiting verified planning data.',
+        facts: [
+          { label: 'Structure', value: 'Road/rail grade separation', placeholder: true },
+          { label: 'Safety benefit', value: 'Eliminates at-grade conflict', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of the SR 161 grade separation in Dublin. Artwork coming soon.',
+            caption: 'SR 161 grade separation — rendering coming soon',
             credit: 'AAO Data Lab',
           },
         ],
@@ -294,3 +394,25 @@ export function getLocation(routeId, locationId) {
   const route = getRoute(routeId)
   return route?.locations.find((l) => l.id === locationId)
 }
+
+export function getCommunity(route, communityId) {
+  return route?.communities?.find((c) => c.id === communityId) ?? null
+}
+
+// Group a route's locations by community, in the route's declared community
+// order. Any location without a (known) communityId falls under "Corridor-wide".
+// Returns [{ community | null, locations }] with empty groups removed.
+export function groupByCommunity(route) {
+  if (!route?.communities?.length) {
+    return [{ community: null, locations: route?.locations ?? [] }]
+  }
+  const groups = route.communities.map((community) => ({
+    community,
+    locations: route.locations.filter((l) => l.communityId === community.id),
+  }))
+  const known = new Set(route.communities.map((c) => c.id))
+  const corridorWide = route.locations.filter((l) => !known.has(l.communityId))
+  if (corridorWide.length) groups.push({ community: null, locations: corridorWide })
+  return groups.filter((g) => g.locations.length)
+}
+

@@ -44,24 +44,26 @@ This tool requires **no secrets** to run. The map uses keyless OpenStreetMap til
 
 ## Adding Routes & Locations
 
-All map content lives in plain data files, so you don't need to touch UI code to
-contribute a location.
+All map content lives in one plain-data file, so you don't need to touch UI code
+to contribute. See the **[Route Authoring Guide](./docs/authoring-routes.md)** for
+the full data model and field reference. In short:
 
-- **Routes and locations:** [`src/data/routes.js`](./src/data/routes.js)
-  - Add a location to a route's `locations` array with a `type`, `[lat, lng]`
-    coordinates, `summary`, `description`, `facts`, and `images`.
-  - Add a whole new route by appending another object to the `routes` array.
-    A **line switcher** and an **"All lines" overview** (every route drawn on the
-    map at once) appear automatically as soon as a second route exists.
+- **Routes and locations:** [`src/data/routes.js`](./src/data/routes.js) — add a
+  point to a route's `locations` array (`type`, `[lat, lng]` coordinates,
+  `summary`, `description`, `facts`, `images`), or append a whole new route to the
+  `routes` array. The **line switcher** and **"All lines" overview** appear
+  automatically once a second route exists.
+- **Communities:** a route may define a `communities` array (e.g. Marysville,
+  Dublin along Midwest Connect); tag locations with a `communityId` so a council
+  or legislator can view and deep-link to just *their area's* content.
 - **Categories (marker colors & icons):** [`src/data/categories.js`](./src/data/categories.js)
 - **Renderings & photos:** drop image files in [`public/renderings/`](./public/renderings)
   and reference them from a location's `images` array. Placeholder SVGs are used
   until real artwork is supplied.
 
-> **Data status:** Marysville, OH is the first seed location. The route alignment
-> is an illustrative placeholder (dashed on the map), and figures marked `TBD` /
-> `placeholder: true` are awaiting verified sources. Renderings currently point at
-> placeholder artwork.
+> **Data status:** Marysville, OH is the first seed community (on the Midwest
+> Connect line). Route alignments are illustrative placeholders (dashed on the
+> map) and figures marked `TBD` / `placeholder: true` await verified sources.
 
 ## Deployment
 

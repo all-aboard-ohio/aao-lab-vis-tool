@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { getCategory } from '../data/categories'
+import { groupByCommunity } from '../data/routes'
 import CategoryIcon from './CategoryIcon'
 
 function StopButton({ loc, index, active, onSelect }) {
@@ -39,23 +40,52 @@ function StopButton({ loc, index, active, onSelect }) {
 /**
  * Accessible list of the points of note for the visible route(s). Doubles as
  * the required text alternative to the map for screen-reader and keyboard users.
- * When more than one line is shown ("All lines" overview), stops are grouped
- * under a heading per line.
+ * Stops are grouped by line (when several are shown) and by community/locality
+ * within a line (when that line defines communities).
  */
-export default function StopList({ routes, selectedId, onSelect }) {
-  const grouped = routes.length > 1
+function StopGroups({ locations, selectedId, onSelect }) {
+  return (
+    <ol className="space-y-2">
+      {locations.map((loc, i) => (
+        <li key={loc.id}>
+          <StopButton loc={loc} index={i} active={loc.id === selectedId} onSelect={onSelect} />
+        </li>
+      ))}
+    </ol>
+  )
+}
 
-  if (!grouped) {
+function RouteStops({ route, selectedId, onSelect }) {
+  const groups = groupByCommunity(route)
+  // Flat list when the line has no community grouping (single group, no label).
+  if (groups.length === 1 && !groups[0].community) {
+    return <StopGroups locations={groups[0].locations} selectedId={selectedId} onSelect={onSelect} />
+  }
+  return (
+    <div className="space-y-3">
+      {groups.map((g) => (
+        <section key={g.community?.id ?? 'corridor-wide'} aria-label={g.community?.name ?? 'Corridor-wide'}>
+          <h4 className="mb-1.5 font-heading text-xs font-bold text-aao-dark-blue">
+            {g.community?.name ?? 'Corridor-wide'}
+            {g.community?.county && (
+              <span className="ml-1 font-body font-medium text-gray-400">· {g.community.county}</span>
+            )}
+          </h4>
+          <StopGroups locations={g.locations} selectedId={selectedId} onSelect={onSelect} />
+        </section>
+      ))}
+    </div>
+  )
+}
+
+export default function StopList({ routes, selectedId, onSelect }) {
+  const multiRoute = routes.length > 1
+
+  if (!multiRoute) {
     const route = routes[0]
     return (
       <nav aria-label={`Points of note along the ${route.name}`}>
-        <ol className="space-y-2">
-          {route.locations.map((loc, i) => (
-            <li key={loc.id}>
-              <StopButton loc={loc} index={i} active={loc.id === selectedId} onSelect={onSelect} />
-            </li>
-          ))}
-        </ol>
+        <RouteStops route={route} selectedId={selectedId} onSelect={onSelect} />
       </nav>
     )
   }
@@ -72,13 +102,7 @@ export default function StopList({ routes, selectedId, onSelect }) {
             />
             {route.name}
           </h3>
-          <ol className="space-y-2">
-            {route.locations.map((loc, i) => (
-              <li key={loc.id}>
-                <StopButton loc={loc} index={i} active={loc.id === selectedId} onSelect={onSelect} />
-              </li>
-            ))}
-          </ol>
+          <RouteStops route={route} selectedId={selectedId} onSelect={onSelect} />
         </section>
       ))}
     </nav>
