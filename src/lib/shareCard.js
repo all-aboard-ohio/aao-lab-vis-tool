@@ -62,6 +62,23 @@ async function ensureFonts() {
   }
 }
 
+// The AAO Data Lab logo, loaded once and reused across cards. It's served from
+// our own origin (public/), so drawing it to the canvas does not taint it.
+const LOGO_SRC = '/AAOLAB_White_Logo.svg'
+let logoPromise = null
+
+function loadLogo() {
+  if (!logoPromise) {
+    logoPromise = new Promise((resolve) => {
+      const img = new Image()
+      img.onload = () => resolve(img)
+      img.onerror = () => resolve(null) // fall back to text branding
+      img.src = LOGO_SRC
+    })
+  }
+  return logoPromise
+}
+
 /**
  * Draw a share card for a location and return it as a Blob (PNG).
  * @param {object} location  a location object from routes.js
@@ -71,6 +88,7 @@ async function ensureFonts() {
  */
 export async function renderShareCard(location, route, preset = 'story') {
   await ensureFonts()
+  const logo = await loadLogo()
 
   const { w, h } = PRESETS[preset] ?? PRESETS.story
   const cat = getCategory(location.type)
@@ -158,19 +176,28 @@ export async function renderShareCard(location, route, preset = 'story') {
 
   // Footer / branding pinned to bottom
   const footY = h - pad - 40
-  ctx.fillStyle = COLORS.darkRed
-  roundRect(ctx, pad, footY - 8, 70, 70, 18)
-  ctx.fill()
-  ctx.fillStyle = '#ffffff'
-  ctx.font = '800 40px Poppins, sans-serif'
-  ctx.fillText('AAO', pad + 12, footY + 44)
+  const logoH = 74
+  let textX = pad + 96
+  if (logo) {
+    const logoW = logoH * (logo.width / logo.height)
+    ctx.drawImage(logo, pad, footY - 12, logoW, logoH)
+    textX = pad + logoW + 28
+  } else {
+    // Fallback branding if the logo asset fails to load.
+    ctx.fillStyle = COLORS.darkRed
+    roundRect(ctx, pad, footY - 8, 70, 70, 18)
+    ctx.fill()
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '800 40px Poppins, sans-serif'
+    ctx.fillText('AAO', pad + 12, footY + 44)
+  }
 
   ctx.fillStyle = COLORS.beige
   ctx.font = '800 44px Poppins, sans-serif'
-  ctx.fillText(SITE.name, pad + 96, footY + 22)
+  ctx.fillText(SITE.name, textX, footY + 22)
   ctx.fillStyle = 'rgba(251,243,227,0.7)'
   ctx.font = '500 30px Montserrat, sans-serif'
-  ctx.fillText(`${route.name} · vis.lab.allaboardohio.org`, pad + 96, footY + 62)
+  ctx.fillText(`${route.name} · vis.lab.allaboardohio.org`, textX, footY + 62)
 
   return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/png'))
 }

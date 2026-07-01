@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { List, X, TrainFront } from 'lucide-react'
-import { routes, getRoute } from './data/routes'
+import { List, X, TrainFront, ChevronDown } from 'lucide-react'
+import { routes } from './data/routes'
 import RouteMap from './components/RouteMap'
 import StopList from './components/StopList'
 import Legend from './components/Legend'
@@ -9,23 +9,46 @@ import ShareModal from './components/ShareModal'
 import { SITE } from './config'
 import './index.css'
 
+// Whether the tool has more than one line to switch between. Drives the switcher
+// and "All lines" overview, which appear automatically once a second route is
+// added to routes.js.
+const MULTI = routes.length > 1
+
 export default function App() {
-  // Single route today; kept as state so adding a route picker is a one-liner.
-  const [routeId] = useState(routes[0].id)
+  // null = "All lines" overview; otherwise a specific route id.
+  const [activeRouteId, setActiveRouteId] = useState(() => (MULTI ? null : routes[0].id))
   const [selectedId, setSelectedId] = useState(null)
   const [panelOpen, setPanelOpen] = useState(false) // mobile stop-list drawer
   const [sharing, setSharing] = useState(false)
 
-  const route = getRoute(routeId)
-  const selected = route.locations.find((l) => l.id === selectedId) ?? null
-  const categoriesInUse = useMemo(
-    () => new Set(route.locations.map((l) => l.type)),
-    [route],
+  const visibleRoutes = useMemo(
+    () => (activeRouteId ? routes.filter((r) => r.id === activeRouteId) : routes),
+    [activeRouteId],
   )
+  const overview = MULTI && !activeRouteId
+
+  const selected = useMemo(
+    () => routes.flatMap((r) => r.locations).find((l) => l.id === selectedId) ?? null,
+    [selectedId],
+  )
+  const selectedRoute = useMemo(
+    () => (selectedId ? routes.find((r) => r.locations.some((l) => l.id === selectedId)) : null),
+    [selectedId],
+  )
+  const categoriesInUse = useMemo(
+    () => new Set(visibleRoutes.flatMap((r) => r.locations.map((l) => l.type))),
+    [visibleRoutes],
+  )
+  const anyPlaceholder = visibleRoutes.some((r) => r.alignmentPlaceholder)
 
   function handleSelect(id) {
     setSelectedId(id)
     setPanelOpen(false)
+  }
+
+  function handleRouteChange(value) {
+    setActiveRouteId(value === 'all' ? null : value)
+    setSelectedId(null)
   }
 
   return (
@@ -39,7 +62,7 @@ export default function App() {
       <main className="relative flex-1 overflow-hidden" aria-label="Interactive route map">
         {/* Map fills the whole area */}
         <div className="absolute inset-0">
-          <RouteMap route={route} selectedId={selectedId} onSelect={handleSelect} />
+          <RouteMap routes={visibleRoutes} selectedId={selectedId} onSelect={handleSelect} />
         </div>
 
         {/* --- Top-left: title + stop browser --- */}
@@ -69,18 +92,67 @@ export default function App() {
               </button>
             </div>
 
-            {/* Route summary */}
+            {/* Line switcher — appears automatically once more than one line exists.
+                Choosing "All lines" closes out of any specific line. */}
+            {MULTI && (
+              <div className="border-t border-gray-100 px-4 py-3">
+                <label
+                  htmlFor="line-select"
+                  className="mb-1 block font-body text-xs font-semibold uppercase tracking-widest text-aao-dark-red"
+                >
+                  Rail line
+                </label>
+                <div className="relative">
+                  <select
+                    id="line-select"
+                    value={activeRouteId ?? 'all'}
+                    onChange={(e) => handleRouteChange(e.target.value)}
+                    className="w-full appearance-none rounded-lg border border-aao-dark-blue/15 bg-white py-2 pl-3 pr-9 font-body text-sm font-semibold text-aao-dark-blue"
+                  >
+                    <option value="all">All lines ({routes.length})</option>
+                    {routes.map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {r.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={16}
+                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-aao-dark-blue/60"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Summary — adapts to overview vs. a single selected line */}
             <div className="border-t border-gray-100 px-4 py-3">
-              <p className="font-body text-xs font-semibold uppercase tracking-widest text-aao-dark-red">
-                {route.region}
-              </p>
-              <p className="mt-1 font-body text-sm leading-snug text-gray-600">{route.summary}</p>
+              {overview ? (
+                <>
+                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-aao-dark-red">
+                    Ohio · {routes.length} lines
+                  </p>
+                  <p className="mt-1 font-body text-sm leading-snug text-gray-600">
+                    Every proposed line is shown below. Pick a line above, or tap any point on the
+                    map to explore it.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="font-body text-xs font-semibold uppercase tracking-widest text-aao-dark-red">
+                    {visibleRoutes[0].region}
+                  </p>
+                  <p className="mt-1 font-body text-sm leading-snug text-gray-600">
+                    {visibleRoutes[0].summary}
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Stop list — always visible on desktop, toggle on mobile */}
             <div className={`${panelOpen ? 'block' : 'hidden'} md:block`}>
-              <div className="max-h-[42vh] overflow-y-auto border-t border-gray-100 p-3 md:max-h-[calc(100vh-22rem)]">
-                <StopList route={route} selectedId={selectedId} onSelect={handleSelect} />
+              <div className="max-h-[42vh] overflow-y-auto border-t border-gray-100 p-3 md:max-h-[calc(100vh-24rem)]">
+                <StopList routes={visibleRoutes} selectedId={selectedId} onSelect={handleSelect} />
               </div>
             </div>
           </div>
@@ -92,7 +164,7 @@ export default function App() {
         </div>
 
         {/* --- Placeholder-data notice --- */}
-        {route.alignmentPlaceholder && (
+        {anyPlaceholder && (
           <div className="pointer-events-none absolute left-1/2 top-3 z-[900] -translate-x-1/2">
             <span className="pointer-events-auto rounded-full bg-aao-dark-blue/90 px-3 py-1.5 font-body text-xs font-semibold text-aao-beige shadow-md">
               Illustrative preview · alignment &amp; figures are placeholders
@@ -106,7 +178,7 @@ export default function App() {
             <LocationPanel
               key={selected.id}
               location={selected}
-              route={route}
+              route={selectedRoute}
               onClose={() => setSelectedId(null)}
               onShare={() => setSharing(true)}
             />
@@ -115,7 +187,7 @@ export default function App() {
 
         {/* --- Share modal --- */}
         {sharing && selected && (
-          <ShareModal location={selected} route={route} onClose={() => setSharing(false)} />
+          <ShareModal location={selected} route={selectedRoute} onClose={() => setSharing(false)} />
         )}
       </main>
 

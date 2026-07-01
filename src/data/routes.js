@@ -182,6 +182,103 @@ export const routes = [
       },
     ],
   },
+
+  // -------------------------------------------------------------------------
+  // SECOND ROUTE — CONCEPT STUB (placeholder)
+  // Included to demonstrate the multi-line switcher and "All lines" overview.
+  // Replace or remove once real corridor data is authored. All coordinates and
+  // figures here are illustrative placeholders.
+  // -------------------------------------------------------------------------
+  {
+    id: '3cd-corridor',
+    name: '3C&D Corridor',
+    region: 'Columbus · Delaware · Marion',
+    color: '#B72717',
+    status: 'concept',
+    summary:
+      'A concept sketch of the flagship 3C&D corridor heading north from Columbus. Data coming soon.',
+    view: {
+      center: [40.2987, -83.068],
+      zoom: 10,
+    },
+    alignmentPlaceholder: true,
+    alignment: [
+      [39.9713, -82.9988],
+      [40.0764, -83.0402],
+      [40.2987, -83.068],
+      [40.4501, -83.09],
+      [40.5887, -83.1286],
+    ],
+    locations: [
+      {
+        id: '3cd-columbus-station',
+        type: 'station',
+        name: 'Columbus Downtown Station',
+        coordinates: [39.9713, -82.9988],
+        status: 'concept',
+        summary:
+          'A proposed downtown Columbus station anchoring the southern end of the corridor.',
+        description:
+          'A downtown Columbus station would connect Ohio’s largest city to the statewide network, linking hundreds of thousands of residents and workers to intercity rail for the first time in decades. This is a concept placeholder awaiting verified planning data.',
+        facts: [
+          { label: 'Station type', value: 'Downtown terminal', placeholder: true },
+          { label: 'Metro population served', value: 'TBD', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of the proposed Columbus Downtown Station. Artwork coming soon.',
+            caption: 'Columbus Downtown Station — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+      {
+        id: '3cd-delaware-station',
+        type: 'station',
+        name: 'Delaware Station',
+        coordinates: [40.2987, -83.068],
+        status: 'concept',
+        summary: 'A proposed stop serving fast-growing Delaware County.',
+        description:
+          'A station in Delaware would give one of Ohio’s fastest-growing counties a car-free connection to Columbus and points north. This is a concept placeholder awaiting verified planning data.',
+        facts: [
+          { label: 'Station type', value: 'Suburban stop', placeholder: true },
+          { label: 'County growth', value: 'TBD', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of the proposed Delaware Station. Artwork coming soon.',
+            caption: 'Delaware Station — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+      {
+        id: '3cd-marion-tod',
+        type: 'tod',
+        name: 'Marion Downtown District',
+        coordinates: [40.5887, -83.1286],
+        status: 'concept',
+        summary: 'Transit-oriented revitalization anchored on a restored Marion depot.',
+        description:
+          'Rail service could anchor downtown revitalization in Marion, pairing a restored depot with walkable housing and small business growth. This is a concept placeholder awaiting verified planning data.',
+        facts: [
+          { label: 'Focus', value: 'Depot-anchored revival', placeholder: true },
+          { label: 'New homes potential', value: 'TBD units', placeholder: true },
+        ],
+        images: [
+          {
+            src: PLACEHOLDER_RENDERING,
+            alt: 'Placeholder rendering of transit-oriented development in downtown Marion. Artwork coming soon.',
+            caption: 'Marion downtown district — rendering coming soon',
+            credit: 'AAO Data Lab',
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 // Flattened helper: every location across all routes, tagged with its route id.

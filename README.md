@@ -49,6 +49,9 @@ contribute a location.
 - **Routes and locations:** [`src/data/routes.js`](./src/data/routes.js)
   - Add a location to a route's `locations` array with a `type`, `[lat, lng]`
     coordinates, `summary`, `description`, `facts`, and `images`.
+  - Add a whole new route by appending another object to the `routes` array.
+    A **line switcher** and an **"All lines" overview** (every route drawn on the
+    map at once) appear automatically as soon as a second route exists.
 - **Categories (marker colors & icons):** [`src/data/categories.js`](./src/data/categories.js)
 - **Renderings & photos:** drop image files in [`public/renderings/`](./public/renderings)
   and reference them from a location's `images` array. Placeholder SVGs are used
